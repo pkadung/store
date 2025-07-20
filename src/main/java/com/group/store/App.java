@@ -12,7 +12,7 @@ import java.io.IOException;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        MyStage.getInstance(stage).show("hello-view.fxml");
+        MyStage.getInstance(stage).show("menu.fxml");
     }
 
     @Override

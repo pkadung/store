@@ -2,6 +2,7 @@ module com.group.store {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires jdk.jfr;
 
 
     opens com.group.store to javafx.fxml;
