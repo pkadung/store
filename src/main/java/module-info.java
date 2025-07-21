@@ -7,4 +7,5 @@ module com.group.store {
 
     opens com.group.store to javafx.fxml;
     exports com.group.store;
+    exports com.group.pojo;
 }
