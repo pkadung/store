@@ -17,5 +17,6 @@ public class ProductInsertRepo extends InsertRepository {
         params.add(product.getAmount());
         params.add(product.getPrice());
         return this.getStatement("insert into product(name, category_id, amount, price) value(?,?,?,?)", params).executeUpdate();
+
     }
 }
