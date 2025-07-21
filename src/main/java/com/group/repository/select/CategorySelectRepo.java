@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryRepo extends SelectRepository<Category> {
+public class CategorySelectRepo extends SelectRepository<Category> {
 
     @Override
     public List<Category> getResult(ResultSet rs) throws SQLException {

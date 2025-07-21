@@ -15,6 +15,13 @@ public class Product {
         this.price = price;
     }
 
+    public Product(String name, int category_id, int amount, double price) {
+        this.name = name;
+        this.category_id = category_id;
+        this.amount = amount;
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return this.name;

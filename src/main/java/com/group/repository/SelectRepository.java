@@ -17,6 +17,7 @@ public abstract class SelectRepository<T> extends RepositoryTemplate{
         }
         return stm;
     }
+    protected abstract List<T> getList() throws SQLException;
 
     protected List<T> list(String getSql, Objects... params) throws SQLException {
         return getResult(getStatement(getSql, List.of(params)).executeQuery());
