@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="436.0" prefWidth="379.0" styleClass="Main" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group.store.MenuController">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="STORE" />
+      <Button mnemonicParsing="false" onAction="#handleManageProduct" styleClass="Button" text="Manage Product" />
+      <Button mnemonicParsing="false" onAction="#handleCaculateMoney" styleClass="Button" text="Calculate Money" />
+      <Button mnemonicParsing="false" onAction="#handleHistoryInvoice" styleClass="Button" text="History Invoice" />
+   </children>
+</VBox>
