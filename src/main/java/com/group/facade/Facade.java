@@ -30,4 +30,8 @@ public class Facade {
     public void addProduct(Product product) throws SQLException {
         productServices.addProduct(product);
     }
+
+    public void updateProduct(Product product) throws SQLException {
+        productServices.updateProduct(product);
+    }
 }

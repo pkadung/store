@@ -5,6 +5,7 @@ import com.group.pojo.Product;
 import com.group.repository.Cache;
 import com.group.utils.Configs;
 import com.group.utils.MyAlert;
+import com.group.utils.MyStage;
 import com.group.utils.MyTableView;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,6 +28,8 @@ public class ManageProductController implements Initializable {
     @FXML TextField txtQuantity;
     @FXML ComboBox<Category> cbCategory;
     @FXML TableView<Product> tblProduct;
+    @FXML Button btnAdd;
+    @FXML TextField txtProductId;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -37,6 +40,7 @@ public class ManageProductController implements Initializable {
         } catch (Exception e) {
             MyAlert.getInstance().showMsg("LOAD_FAILED");
         }
+        this.txtProductId.setDisable(true);
     }
 
     public void addProduct(ActionEvent event) throws SQLException {
@@ -47,9 +51,14 @@ public class ManageProductController implements Initializable {
         try {
             Double price = Double.parseDouble(this.txtPrice.getText());
             int quantity = Integer.parseInt(txtQuantity.getText());
-            int categoryId = cbCategory.getValue().getId();
+            int categoryId = cbCategory.getSelectionModel().getSelectedItem().getId();
             if (price <= 0.0 || categoryId <= 0 || quantity < 0) throw new Exception();
-            Configs.f.addProduct(new Product(txtName.getText(), categoryId, quantity, price));
+            if (btnAdd.getText().equals("Add")) {
+                Configs.f.addProduct(new Product(txtName.getText(), categoryId, quantity, price));
+            } else {
+                Configs.f.updateProduct(new Product(Integer.parseInt(txtProductId.getText()), txtName.getText(), categoryId, quantity, price));
+                this.btnAdd.setText("Add");
+            }
             this.tblProduct.setItems(FXCollections.observableList(Configs.f.listProducts()));
             reset();
             MyAlert.getInstance().showMsg("PRODUCT_ADDED_SUCCESSFULLY");
@@ -59,6 +68,20 @@ public class ManageProductController implements Initializable {
             MyAlert.getInstance().showMsg("INVALID_INPUT_DATA");
         }
     }
+
+    public void RepairInformation(Product product) {
+        this.btnAdd.setText("Repair");
+        this.txtName.setText(product.getName());
+        for(Category c: this.cbCategory.getItems()) {
+            if(product.getCategory_id() == c.getId()) {
+                this.cbCategory.getSelectionModel().select(c);
+            }
+        }
+        this.txtQuantity.setText(String.valueOf(product.getAmount()));
+        this.txtPrice.setText(String.valueOf(product.getPrice()));
+        this.txtProductId.setText(String.valueOf(product.getId()));
+    }
+
 
     public void reset() {
         txtName.clear();
@@ -95,6 +118,10 @@ public class ManageProductController implements Initializable {
             TableCell cell = new TableCell();
 
             Button btn = new Button("Repair");
+            btn.setOnAction(event -> {
+                Product product = this.tblProduct.getItems().get(cell.getIndex());
+                RepairInformation(product);
+            });
             cell.setGraphic(btn);
             return cell;
         });
@@ -104,6 +131,7 @@ public class ManageProductController implements Initializable {
             TableCell cell = new TableCell();
 
             Button btn = new Button("X");
+            btn.setOnAction(this::DeleteProduct);
             cell.setGraphic(btn);
             return cell;
         });
@@ -116,5 +144,11 @@ public class ManageProductController implements Initializable {
                 .addCol(colRepair).addCol(colRemove).build().getListCols();
 
         this.tblProduct.getColumns().addAll(cols);
+    }
+
+
+    public void DeleteProduct(ActionEvent event) {}
+    public void goBack(ActionEvent event) {
+        MyStage.getInstance().goBack();
     }
 }

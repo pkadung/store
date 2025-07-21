@@ -19,4 +19,9 @@ public class ProductServices {
        if (changed == 0) throw new SQLException();
        Cache.refresh(productSelectRepo,Product.TableName());
     }
+    public void updateProduct(Product p) throws SQLException {
+        int changed = productInsertRepo.updateProductByID(p);
+        if (changed == 0) throw new SQLException();
+        Cache.refresh(productSelectRepo,Product.TableName());
+    }
 }
