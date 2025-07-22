@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Facade {
-    CategoryServices categoryServices = new CategoryServices();
-    ProductServices productServices = new ProductServices();
+    private CategoryServices categoryServices = new CategoryServices();
+    private ProductServices productServices = new ProductServices();
     public List<Category> listCategories() throws Exception {
         try {
             return categoryServices.listCategories();

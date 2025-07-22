@@ -1,15 +1,13 @@
-package com.group.repository.insert;
+package com.group.repository;
 
 import com.group.pojo.Product;
-import com.group.repository.InsertRepository;
-import com.group.repository.RepositoryTemplate;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ProductInsertRepo extends InsertRepository {
+public class UpdateRepository extends RepositoryTemplate {
     public int addProduct(Product product) throws SQLException {
         List<Object> params = new ArrayList<>();
         params.add(product.getName());

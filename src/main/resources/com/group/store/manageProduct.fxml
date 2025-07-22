@@ -26,7 +26,7 @@
       </HBox>
       <HBox prefHeight="57.0" prefWidth="516.0" styleClass="Main">
          <children>
-            <Button mnemonicParsing="false" styleClass="Button" text="Back" />
+            <Button mnemonicParsing="false" onAction="#goBack" styleClass="Button" text="Back" />
             <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#addProduct" styleClass="Button" text="Thêm" />
          </children>
       </HBox>

@@ -15,6 +15,12 @@ public class DetailInvoice {
         this.price = price;
     }
 
+    public DetailInvoice(int productId, int amount, double price) {
+        this.productId = productId;
+        this.amount = amount;
+        this.price = price;
+    }
+
     public static String TableName() {return "detail_invoice";}
 
     public int getId() {

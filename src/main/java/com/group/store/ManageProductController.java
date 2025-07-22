@@ -126,28 +126,16 @@ public class ManageProductController implements Initializable {
             return cell;
         });
 
-        TableColumn<Product,Object> colRemove = new TableColumn();
-        colRemove.setCellFactory(e -> {
-            TableCell cell = new TableCell();
-
-            Button btn = new Button("X");
-            btn.setOnAction(this::DeleteProduct);
-            cell.setGraphic(btn);
-            return cell;
-        });
-
         List<TableColumn<Product,Object>> cols = new MyTableView.Builder<Product>()
                 .addCol("Id", "id", 80)
                 .addCol("Name", "name", 150)
                 .addCol(colCategory).addCol("Quantity", "amount",100)
                 .addCol("Price", "price", 100)
-                .addCol(colRepair).addCol(colRemove).build().getListCols();
+                .addCol(colRepair).build().getListCols();
 
         this.tblProduct.getColumns().addAll(cols);
     }
 
-
-    public void DeleteProduct(ActionEvent event) {}
     public void goBack(ActionEvent event) {
         MyStage.getInstance().goBack();
     }
