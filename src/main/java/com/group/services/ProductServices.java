@@ -23,4 +23,11 @@ public class ProductServices {
         }
         Cache.refresh(productSelectRepo, Product.TableName());
     }
+
+    public void updateProduct(Product product) throws SQLException {
+        if (productInsertRepo.updateProductById(product) == 0) {
+            throw new SQLException();
+        }
+        Cache.refresh(productSelectRepo, Product.TableName());
+    }
 }

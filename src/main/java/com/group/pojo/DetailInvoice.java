@@ -1,14 +1,12 @@
 package com.group.pojo;
 
 public class DetailInvoice {
-    private int id;
     private int invoiceId;
     private int productId;
     private int amount;
     private double price;
 
-    public DetailInvoice(int id, int invoiceId, int productId, int amount, double price) {
-        this.id = id;
+    public DetailInvoice(int invoiceId, int productId, int amount, double price) {
         this.invoiceId = invoiceId;
         this.productId = productId;
         this.amount = amount;
@@ -16,14 +14,6 @@ public class DetailInvoice {
     }
 
     public static String TableName() {return "detail_invoice";}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getInvoiceId() {
         return invoiceId;

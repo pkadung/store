@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.group.store.CaculateMoneyController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="862.0" styleClass="Main" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group.store.CaculateMoneyController">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="Get Bill" />
+      <TextField fx:id="txtCustomerName" promptText="Tên khách hàng..." />
+      <HBox prefHeight="100.0" prefWidth="200.0" styleClass="Main">
+         <children>
+            <ComboBox fx:id="cbProductName" prefWidth="150.0" promptText="Tên sản phẩm" />
+            <TextField fx:id="txtAmount" promptText="Số lượng" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" X " />
+            <TextField fx:id="txtPrice" promptText="Giá tiền" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" = " />
+            <TextField fx:id="txtSumOneProduct" promptText="Thành tiền" />
+         </children>
+      </HBox>
+      <Button fx:id="btnAdd" mnemonicParsing="false" styleClass="Button" text="Thêm" />
+      <TableView fx:id="tblSelectedProducts" prefHeight="200.0" prefWidth="200.0" />
+      <HBox fx:id="btnExportBill" prefHeight="100.0" prefWidth="200.0" styleClass="Main">
+         <children>
+            <TextField fx:id="txtSumAllProduct" promptText="Tổng" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Button mnemonicParsing="false" styleClass="Button" text="Xuất hóa đơn" />
+         </children>
+      </HBox>
+      <Button fx:id="btnBack" mnemonicParsing="false" styleClass="Button" text="Quay lại" />
+   </children>
+</VBox>

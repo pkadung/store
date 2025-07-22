@@ -1,9 +1,11 @@
 package com.group.store;
 
 import com.group.pojo.Category;
+import com.group.pojo.DetailInvoice;
 import com.group.pojo.Product;
 import com.group.utils.Configs;
 import com.group.utils.MyAlert;
+import com.group.utils.MyStage;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -11,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.w3c.dom.Text;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -21,11 +24,14 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class ManageProductController implements Initializable {
-    @FXML TextField txtName;
-    @FXML TextField txtPrice;
-    @FXML TextField txtQuantity;
-    @FXML ComboBox<Category> cbCategory;
-    @FXML TableView<Product> tblProducts;
+    @FXML private TextField txtName;
+    @FXML private TextField txtPrice;
+    @FXML private TextField txtQuantity;
+    @FXML private ComboBox<Category> cbCategory;
+    @FXML private TableView<Product> tblProducts;
+    @FXML private Button btnAdd;
+    @FXML private TextField txtProductID;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -36,6 +42,7 @@ public class ManageProductController implements Initializable {
         } catch (Exception e) {
             MyAlert.getInstance().showMsg(e.getMessage());
         }
+        this.txtProductID.setDisable(true);
     }
 
     public void loadCollumn(){
@@ -73,20 +80,16 @@ public class ManageProductController implements Initializable {
             TableCell cell = new TableCell();
 
             Button btn = new Button("Repair");
+            btn.setOnAction(event -> {
+                Product product = tblProducts.getItems().get(cell.getIndex());
+                RepairInformation(product);
+            });
             cell.setGraphic(btn);
             return cell;
         });
 
-        TableColumn delCol = new TableColumn("Delete");
-        delCol.setCellFactory( e -> {
-            TableCell cell = new TableCell();
-            Button btn = new Button("Delete");
 
-            cell.setGraphic(btn);
-            return cell;
-        });
-
-        this.tblProducts.getColumns().addAll(idCol, nameCol, categoryIdCol, quantityCol, priceCol, repairCol, delCol);
+        this.tblProducts.getColumns().addAll(idCol, nameCol, categoryIdCol, quantityCol, priceCol, repairCol);
     }
 
     public void addProduct(ActionEvent event) {
@@ -101,14 +104,18 @@ public class ManageProductController implements Initializable {
             int categoryId = cbCategory.getValue().getId();
 
             if (price <=0 || quantity < 0 || categoryId < 0 ) throw new Exception();
+            if(btnAdd.getText().equals("Add")) Configs.f.addProduct( new Product(txtName.getText(), categoryId, quantity, price));
+            else{
+                Configs.f.updateProduct(new Product(Integer.parseInt(txtProductID.getText()),txtName.getText(),categoryId,quantity,price));
+                btnAdd.setText("Add");
+            }
 
-            Configs.f.addProduct( new Product(txtName.getText(), categoryId, quantity, price));
             this.tblProducts.setItems(FXCollections.observableList(Configs.f.listProducts()));
             this.refresh();
 
             MyAlert.getInstance().showMsg("Product added successfully");
         } catch (SQLException e) {
-            MyAlert.getInstance().showMsg("Failed to add product");
+            MyAlert.getInstance().showMsg(e.getMessage());
         }
         catch(Exception e){
             MyAlert.getInstance().showMsg("Invalid input data!!");
@@ -126,5 +133,25 @@ public class ManageProductController implements Initializable {
         txtPrice.clear();
         txtQuantity.clear();
         cbCategory.setValue(null);
+    }
+
+    public void RepairInformation(Product product) {
+        //Lay dc noi dung da chon va hien thi len giao dien
+        //Co the thay doi va update DB, reload lai cache
+        this.txtName.setText(product.getName());
+        //ComboBox Category
+        for (Category c: this.cbCategory.getItems()){
+            if (c.getId() == product.getCategory_id()) this.cbCategory.setValue(c);
+        }
+        this.txtQuantity.setText(Integer.toString(product.getAmount()));
+        this.txtPrice.setText(Double.toString(product.getPrice()));
+
+        this.btnAdd.setText("Repair");
+
+        this.txtProductID.setText(Integer.toString(product.getId()));
+    }
+
+    public void goBack(ActionEvent event) {
+        MyStage.getInstance().goBack();
     }
 }
