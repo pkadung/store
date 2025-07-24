@@ -34,6 +34,14 @@ public class Facade {
         }
     }
 
+    public List<Invoice> listInvoice() throws Exception {
+        try {
+            return invoiceServices.getList();
+        } catch (SQLException e) {
+            throw new Exception(e);
+        }
+    }
+
     public void addProduct(Product product) throws SQLException {
         productServices.addProduct(product);
     }
