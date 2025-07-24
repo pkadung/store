@@ -14,6 +14,10 @@ public class Invoice {
         this.date = date;
     }
 
+    public Invoice(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return this.name;

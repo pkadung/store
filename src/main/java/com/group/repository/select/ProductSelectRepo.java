@@ -25,5 +25,4 @@ public class ProductSelectRepo extends SelectRepository<Product> {
         return this.list("select * from product");
     }
 
-
 }

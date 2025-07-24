@@ -19,7 +19,7 @@ public abstract class RepositoryTemplate {
     }
 
     public PreparedStatement getStatement(String getSql, List<Object> params) throws SQLException {
-        PreparedStatement stm = this.conn.prepareStatement(getSql);
+        PreparedStatement stm = this.conn.prepareCall(getSql);
         for (int i = 0; i < params.size(); i++) {
             stm.setObject(i + 1, params.get(i));
         }

@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="471.0" prefWidth="598.0" styleClass="Main" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group.store.CaculateMoneyController">
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="Subject" text="Get Bill" />
@@ -26,7 +25,7 @@
       </HBox>
       <HBox prefHeight="55.0" prefWidth="578.0" styleClass="Main">
          <children>
-            <Button mnemonicParsing="false" styleClass="Button" text="Back" />
+            <Button mnemonicParsing="false" onAction="#goBack" styleClass="Button" text="Back" />
             <Button mnemonicParsing="false" onAction="#addDetailInvoice" styleClass="Button" text="Add" />
          </children>
       </HBox>
@@ -34,7 +33,7 @@
       <HBox prefHeight="72.0" prefWidth="598.0" styleClass="Main">
          <children>
             <TextField fx:id="txtPriceInvoice" />
-            <Button mnemonicParsing="false" styleClass="Button" text="Export Invoice" />
+            <Button mnemonicParsing="false" onAction="#exportInvoice" styleClass="Button" text="Export Invoice" />
          </children>
       </HBox>
    </children>

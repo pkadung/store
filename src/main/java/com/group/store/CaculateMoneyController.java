@@ -2,13 +2,16 @@ package com.group.store;
 
 import com.group.pojo.Category;
 import com.group.pojo.DetailInvoice;
+import com.group.pojo.Invoice;
 import com.group.pojo.Product;
 import com.group.utils.Configs;
 import com.group.utils.MyAlert;
 import com.group.utils.MyStage;
 import com.group.utils.MyTableView;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.Delayed;
 import java.util.stream.Collectors;
@@ -54,6 +58,7 @@ public class CaculateMoneyController implements Initializable {
         });
 
         this.loadColumn();
+        this.cbProduct.getSelectionModel().selectFirst();
     }
 
     public void goBack(ActionEvent event) {
@@ -75,25 +80,14 @@ public class CaculateMoneyController implements Initializable {
         });
         colProduct.setMinWidth(150);
 
-        TableColumn<DetailInvoice,Object> colRepair = new TableColumn();
-        colRepair.setCellFactory(e -> {
-            TableCell cell = new TableCell();
-
-            Button btn = new Button("Repair");
-            btn.setOnAction(event -> {
-
-            });
-            cell.setGraphic(btn);
-            return cell;
-        });
-
         TableColumn<DetailInvoice,Object> colRemove = new TableColumn();
         colRemove.setCellFactory(e -> {
             TableCell cell = new TableCell();
 
             Button btn = new Button("X");
             btn.setOnAction(event -> {
-
+                DetailInvoice d = this.tbDetailInvoice.getItems().get(cell.getIndex());
+                RemoveDetailInvoice(d);
             });
             cell.setGraphic(btn);
             return cell;
@@ -102,7 +96,7 @@ public class CaculateMoneyController implements Initializable {
         List<TableColumn<DetailInvoice,Object>> cols = new MyTableView.Builder<DetailInvoice>()
                 .addCol(colProduct).addCol("Amount",  "amount", 100)
                 .addCol("Price", "price", 100)
-                .addCol(colRepair).addCol(colRemove).build().getListCols();
+                .addCol(colRemove).build().getListCols();
 
         this.tbDetailInvoice.getColumns().addAll(cols);
     }
@@ -111,19 +105,60 @@ public class CaculateMoneyController implements Initializable {
         // Kiểm tra giá trị
         try {
             this.validate(this.txtAmount.getText(), this.cbProduct.getSelectionModel().getSelectedItem().getName());
-            int amount = Integer.parseInt(this.txtAmount.getText());
             int productId = this.cbProduct.getSelectionModel().getSelectedItem().getId();
-            if (amount <= 0 || amount >  this.cbProduct.getSelectionModel().getSelectedItem().getAmount() || productId <= 0) throw new Exception();
-            detailInvoices.add(new DetailInvoice(productId, amount, Double.parseDouble(txtPrice.getText())));
+            int amount = Integer.parseInt(this.txtAmount.getText()) + this.detailInvoices.stream()
+                    .filter(item -> item.getProductId() == productId).mapToInt(DetailInvoice::getAmount).sum();
+            double price = this.detailInvoices.stream().filter(item -> item.getProductId() == productId)
+                    .mapToDouble(DetailInvoice::getPrice).sum();
+            if (amount < 0 || amount > this.cbProduct.getSelectionModel().getSelectedItem().getAmount() || productId <= 0) throw new Exception();
+            this.detailInvoices.removeIf(item -> item.getProductId() == productId);
+            if (amount != 0) detailInvoices.add(new DetailInvoice(productId, amount, price + Double.parseDouble(txtTotalPrice.getText())));
             this.tbDetailInvoice.setItems(FXCollections.observableList(detailInvoices));
-        } catch (Exception e) {
-            MyAlert.getInstance().showMsg("INVALID_INPUT_DATA");
+            this.updateTotalPrice();
         }
+        catch (Exception e) {
+            MyAlert.getInstance().showMsg("INVALID_INPUT");
+        } finally {
+            this.refresh();
+        }
+    }
+
+    public void RemoveDetailInvoice(DetailInvoice d) {
+        this.detailInvoices.removeIf(item -> item.getProductId() == d.getProductId());
+        this.tbDetailInvoice.setItems(FXCollections.observableList(this.detailInvoices));
+        this.updateTotalPrice();
+    }
+
+    public void updateTotalPrice() {
+        this.txtPriceInvoice.setText(String.valueOf(this.detailInvoices.stream().mapToDouble(DetailInvoice::getPrice).sum()));
+    }
+
+    public void refresh() {
+        this.txtAmount.clear();
     }
 
     public void validate(String... str) throws Exception {
         for (String s : str) {
             if (s.equals("")) throw new Exception();
+        }
+    }
+
+    public void exportInvoice(ActionEvent event) {
+        // Kiểm tra thử có khách hàng chưa
+        try {
+            this.validate(this.txtNameCustomer.getText());
+            if (this.detailInvoices.size() == 0) throw new Exception();
+            Configs.f.exportInvoice(new Invoice(this.txtNameCustomer.getText()), this.detailInvoices);
+            this.txtNameCustomer.setText("");
+            MyAlert.getInstance().showMsg("Invoice successfully exported");
+            this.detailInvoices.clear();
+            this.tbDetailInvoice.setItems(FXCollections.observableList(this.detailInvoices));
+            this.txtPriceInvoice.setText("");
+        } catch (SQLException e) {
+            MyAlert.getInstance().showMsg(e.getMessage());
+        }
+        catch (Exception e) {
+            MyAlert.getInstance().showMsg("INVALID_INPUT_DATA");
         }
     }
 }
